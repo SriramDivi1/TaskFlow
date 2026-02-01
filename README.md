@@ -14,7 +14,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-Next%20Gen-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
 
-[Live Demo](#) • [Features](#-features) • [Installation](#-quick-start) • [Screenshots](#-app-showcase)
+[Live Demo](https://taskflow-app-iota.vercel.app/) • [Features](#-features) • [Installation](#-quick-start) • [Screenshots](#-app-showcase)
 
 </div>
 
