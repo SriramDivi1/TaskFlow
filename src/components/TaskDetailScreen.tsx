@@ -1,7 +1,7 @@
 import React from 'react';
 import { ChevronLeft, Calendar, Clock, MoreVertical, Edit, Trash2, CheckCircle, AlertCircle } from 'lucide-react';
 import { Task } from '../types';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useStore } from '../store';
 import { toast } from 'sonner';
 

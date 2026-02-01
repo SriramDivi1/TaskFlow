@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Mail, Lock, Phone, ArrowRight, Smartphone, Eye, EyeOff, User, Check, X } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -32,9 +32,11 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSignInCl
       lowercase: /[a-z]/.test(password),
       uppercase: /[A-Z]/.test(password),
       number: /[0-9]/.test(password),
-      special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+      special: /[!@#$%^&*(),.<>?":{}|<>\-_~`[\]\\/';=+]/.test(password)
     });
   }, [password]);
+
+  const isValidEmail = (email: string) => /^[\w.-]+@[\w.-]+\.\w+$/.test(email);
 
   const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +48,11 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSignInCl
 
     if (method === 'email' && !email) {
       toast.error('Please enter your email address');
+      return;
+    }
+
+    if (method === 'email' && !isValidEmail(email)) {
+      toast.error('Please enter a valid email address');
       return;
     }
 
@@ -113,8 +120,9 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSignInCl
           {/* Name Fields */}
           <div className="flex space-x-3">
             <div className="space-y-2 flex-1">
-              <label className="text-xs font-bold text-slate-700 ml-1">First Name</label>
+              <label htmlFor="firstName" className="text-xs font-bold text-slate-700 ml-1">First Name</label>
               <input 
+                id="firstName"
                 type="text" 
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
@@ -123,8 +131,9 @@ export const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onSignInCl
               />
             </div>
             <div className="space-y-2 flex-1">
-              <label className="text-xs font-bold text-slate-700 ml-1">Last Name</label>
+              <label htmlFor="lastName" className="text-xs font-bold text-slate-700 ml-1">Last Name</label>
               <input 
+                id="lastName"
                 type="text" 
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}

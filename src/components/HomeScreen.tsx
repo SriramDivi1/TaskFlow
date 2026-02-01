@@ -1,25 +1,34 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CalendarStrip } from './CalendarStrip';
 import { Task } from '../types';
 import { MoreVertical, Clock, CheckCircle2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useStore } from '../store';
 
-interface HomeScreenProps {
-  onTaskClick: (task: Task) => void;
-}
-
-export const HomeScreen: React.FC<HomeScreenProps> = ({ onTaskClick }) => {
+export const HomeScreen: React.FC = () => {
   const tasks = useStore(state => state.tasks);
   const selectedDate = useStore(state => state.selectedDate);
   const setSelectedDate = useStore(state => state.setSelectedDate);
-  const filteredTasks = useMemo(() => {
-    return tasks.filter(t => 
-      t.date.getDate() === selectedDate.getDate() &&
-      t.date.getMonth() === selectedDate.getMonth() &&
-      t.date.getFullYear() === selectedDate.getFullYear()
-    );
+  const navigate = useNavigate();
+  const [selectedFilter, setSelectedFilter] = useState('All');
+
+  // Filter tasks for selected date
+  const todaysTasks = useMemo(() => {
+    return tasks.filter(task => {
+      const taskDate = new Date(task.date);
+      return taskDate.toDateString() === selectedDate.toDateString();
+    });
   }, [tasks, selectedDate]);
+
+  // Apply selected filter
+  const filteredTasks = useMemo(() => {
+    if (selectedFilter === 'All') return todaysTasks;
+    if (selectedFilter === 'My tasks') return todaysTasks; // Placeholder for actual 'My tasks' logic
+    if (selectedFilter === 'In-progress') return todaysTasks.filter(t => !t.completed);
+    if (selectedFilter === 'Completed') return todaysTasks.filter(t => t.completed);
+    return todaysTasks; // Default case
+  }, [todaysTasks, selectedFilter]);
 
   const progress = useMemo(() => {
     if (filteredTasks.length === 0) return 0;
@@ -73,11 +82,12 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onTaskClick }) => {
 
       {/* Filter Chips */}
       <div className="flex space-x-3 mt-8 overflow-x-auto no-scrollbar pb-2">
-        {['All', 'My tasks', 'In-progress', 'Completed'].map((filter, i) => (
+        {['All', 'My tasks', 'In-progress', 'Completed'].map((filter) => (
           <button 
-            key={i}
+            key={filter}
+            onClick={() => setSelectedFilter(filter)}
             className={`px-5 py-2.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-              i === 1 ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'bg-white text-slate-600 border border-slate-100'
+              selectedFilter === filter ? 'bg-teal-600 text-white shadow-md shadow-teal-600/20' : 'bg-white text-slate-600 border border-slate-100'
             }`}
           >
             {filter}
@@ -88,14 +98,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({ onTaskClick }) => {
       {/* Pinned Tasks Header */}
       <div className="flex justify-between items-center mt-8 mb-4">
         <h2 className="text-lg font-bold text-slate-900">Pinned Tasks</h2>
-        <button className="text-sm font-medium text-teal-600">See All</button>
+        <button 
+          onClick={() => navigate('/search')}
+          className="text-sm font-medium text-teal-600"
+        >
+          See All
+        </button>
       </div>
 
       {/* Task Cards */}
       <div className="space-y-4">
         {filteredTasks.length > 0 ? (
           filteredTasks.map((task) => (
-             <TaskCard key={task.id} task={task} onClick={() => onTaskClick(task)} />
+             <TaskCard key={task.id} task={task} onClick={() => navigate(`/task/${task.id}`)} />
           ))
         ) : (
           <div className="text-center py-10 text-slate-400">

@@ -28,13 +28,14 @@ export const BottomNav: React.FC = () => {
           
           if (tab.isMain) {
             return (
-              <button
+              <Link 
                 key={tab.id}
-                onClick={() => navigate(tab.path)}
-                className="w-14 h-14 -mt-8 bg-teal-600 rounded-full flex items-center justify-center shadow-xl shadow-teal-600/30 hover:bg-teal-700 active:scale-95 transition-all"
+                to={tab.path}
+                className="w-14 h-14 bg-teal-600 rounded-full flex items-center justify-center shadow-2xl shadow-teal-600/30 -mt-7 hover:bg-teal-700 transition-colors"
+                aria-label={tab.label || "Create new task"}
               >
                 <Icon size={28} className="text-white" />
-              </button>
+              </Link>
             );
           }
 
