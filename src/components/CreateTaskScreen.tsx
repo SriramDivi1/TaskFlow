@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeft, Calendar as CalendarIcon, Clock, Paperclip, X } from 'lucide-react';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { Category, Priority, Task } from '../types';
 import { useStore } from '../store';
 import { useNavigate } from 'react-router-dom';
@@ -21,10 +21,35 @@ export const CreateTaskScreen: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate title
+    if (!title.trim()) {
+      toast.error('Please enter a task title');
+      return;
+    }
+    
+    // Validate category
+    if (!selectedCategory) {
+      toast.error('Please select a category');
+      return;
+    }
+    
+    // Validate date
+    if (!date) {
+      toast.error('Please select a date');
+      return;
+    }
+    
+    const taskDate = new Date(date);
+    if (isNaN(taskDate.getTime())) {
+      toast.error('Please enter a valid date');
+      return;
+    }
+    
     addTask({
       title,
       description,
-      date: new Date(date),
+      date: taskDate,
       startTime,
       endTime,
       category: selectedCategory,

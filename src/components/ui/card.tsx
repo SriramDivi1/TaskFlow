@@ -28,25 +28,31 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <h4
+const CardTitle = React.forwardRef<
+  HTMLHeadingElement,
+  React.ComponentProps<"h4">
+>(({ className, ...props }, ref) => (
+  <h4
       data-slot="card-title"
       className={cn("leading-none", className)}
+      ref={ref}
       {...props}
     />
-  );
-}
+))
+CardTitle.displayName = "CardTitle"
 
-function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <p
+const CardDescription = React.forwardRef<
+  HTMLParagraphElement,
+  React.ComponentProps<"p">
+>(({ className, ...props }, ref) => (
+  <p
       data-slot="card-description"
       className={cn("text-muted-foreground", className)}
+      ref={ref}
       {...props}
     />
-  );
-}
+))
+CardDescription.displayName = "CardDescription"
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (

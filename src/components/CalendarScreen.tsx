@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ChevronLeft, ChevronRight, MoreVertical } from 'lucide-react';
 import { Task } from '../types';
-import { motion } from 'motion/react';
+import { motion } from 'framer-motion';
 import { useStore } from '../store';
 
 interface CalendarScreenProps {
@@ -70,7 +70,10 @@ export const CalendarScreen: React.FC<CalendarScreenProps> = ({ onTaskClick }) =
             {days.map(day => {
               const dayTasks = getTasksForDay(day);
               const isSelected = selectedDay === day;
-              const isToday = day === new Date().getDate() && currentDate.getMonth() === new Date().getMonth();
+              const today = new Date();
+              const isToday = day === today.getDate() && 
+                         currentDate.getMonth() === today.getMonth() &&
+                         currentDate.getFullYear() === today.getFullYear();
               
               return (
                 <button 

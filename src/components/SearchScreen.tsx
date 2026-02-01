@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Search, X, Filter, Clock, ArrowUpRight } from 'lucide-react';
 import { Task } from '../types';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../store';
 
 interface SearchScreenProps {
@@ -14,12 +14,19 @@ export const SearchScreen: React.FC<SearchScreenProps> = ({ onTaskClick }) => {
   const [activeFilter, setActiveFilter] = useState('All');
 
   const filteredTasks = useMemo(() => {
-    if (!query) return [];
-    return tasks.filter(t => 
-      t.title.toLowerCase().includes(query.toLowerCase()) || 
-      t.category.toLowerCase().includes(query.toLowerCase())
-    );
-  }, [query, tasks]);
+    return tasks.filter(task => {
+      // Filter by query (search term)
+      const matchesQuery = !query || 
+        task.title.toLowerCase().includes(query.toLowerCase()) ||
+        task.category?.toLowerCase().includes(query.toLowerCase());
+      
+      // Filter by category
+      const matchesFilter = activeFilter === 'All' || 
+        task.category?.toLowerCase() === activeFilter.toLowerCase();
+      
+      return matchesQuery && matchesFilter;
+    });
+  }, [tasks, query, activeFilter]);
 
   const recentSearches = ['Design System', 'Marketing', 'Quarterly Review', 'Bug Fixes'];
 

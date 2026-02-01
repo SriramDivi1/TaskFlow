@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { User, Bell, Shield, Globe, HelpCircle, LogOut, ChevronRight, Settings, ChevronLeft, Camera, Mail, Phone, Briefcase, Check } from 'lucide-react';
 import { User as UserType } from '../types';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { useStore } from '../store';
 
@@ -296,17 +296,27 @@ const InputGroup: React.FC<{ label: string; icon: React.ReactNode; value: string
   </div>
 );
 
-const SwitchItem: React.FC<{ label: string; description: string; checked: boolean; onChange: () => void }> = ({ label, description, checked, onChange }) => (
-  <div className="flex items-center justify-between p-2">
+const SwitchItem: React.FC<{ label: string; description?: string; checked: boolean; onChange: () => void }> = ({ label, description, checked, onChange }) => (
+  <div className="flex items-center justify-between py-3">
     <div>
-       <h4 className="font-bold text-slate-900 text-sm">{label}</h4>
-       <p className="text-xs text-slate-400 mt-0.5">{description}</p>
+       <div className="text-slate-900 font-medium">{label}</div>
+       {description && <div className="text-xs text-slate-500 mt-0.5">{description}</div>}
     </div>
     <button 
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      aria-label={label}
       onClick={onChange}
-      className={`w-12 h-7 rounded-full p-1 transition-colors duration-300 ${checked ? 'bg-teal-600' : 'bg-slate-200'}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onChange();
+        }
+      }}
+      className={`relative w-12 h-6 rounded-full transition-colors ${checked ? 'bg-teal-500' : 'bg-slate-200'}`}
     >
-      <div className={`w-5 h-5 bg-white rounded-full shadow-sm transform transition-transform duration-300 ${checked ? 'translate-x-5' : 'translate-x-0'}`}></div>
+      <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${checked ? 'translate-x-6' : ''}`} />
     </button>
   </div>
 );
